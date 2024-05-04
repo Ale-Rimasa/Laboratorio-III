@@ -42,3 +42,6 @@ WHERE Proveedores.RazonSocial_PR = 'Plaza vea'
 GO
 
 
+
+
+
