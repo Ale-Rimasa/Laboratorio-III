@@ -34,8 +34,10 @@ GO
 SELECT M.Tipo_ME AS [Medicamento más vendido]
 FROM Medicamentos M INNER JOIN DetalleVentas 
 ON M.CodMedicamento_ME = DetalleVentas.CodMedicamento_ME_DV
-WHERE DetalleVentas.Cantidad_DV = (SELECT MAX(DetalleVentas.Cantidad_DV) AS [Mayor Venta] FROM DetalleVentas)
+WHERE DetalleVentas.Cantidad_DV = (SELECT MAX(DetalleVentas.Cantidad_DV) FROM DetalleVentas)
 GO
+
+
 
 
 SELECT * FROM DetalleVentas
