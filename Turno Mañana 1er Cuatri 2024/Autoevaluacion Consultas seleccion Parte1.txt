@@ -1,0 +1,328 @@
+
+Pregunta 1
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
++----------------------------------------------------------------------------+
+|  ID | APELLIDO| NOMBRE | FECHA    | SEXO |  TEL |  MAIL          |CODPOSTAL|
+|----------------------------------------------------------------------------|
+|  1  | PEREZ   | CARLOS |10/10/2000|  M   | 12345| CARL@GMAIL.COM | 1234    |
+|  2  | HERMAN  | DIANA  |21/04/1990|  F   | NULL | HDIA@MAIL.COM  | 1234    |
+|  3  | DIAZ    | JULIETA|30/11/1989|  F   | NULL | NULL           | 5555    |
+|  4  | RE      | JAVIER |02/10/1986|  M   | 99999| NULL           | 1929    |
+|  5  | BAEZ    | MARCOS |05/05/1992|  M   | NULL | MARCOS@BAEZ.COM| 1001    |
+|  6  | GALEANO | IARA   |11/02/1999|  F   | 77712| NULL           | 9999    |
++----------------------------------------------------------------------------+
+
+¿Qué dato obtiene la siguiente consulta?
+
+SELECT APELLIDO, NOMBRE WHERE TEL IS NULL AND MAIL IS NULL
+Seleccione una:
+
+a.
++----------+---------+
+
+| APELLIDO | NOMBRE  |
+
++----------+---------+
+
+| DIAZ     | JULIETA |
+
++----------+---------+ 
+
+b.
++----------+--------+
+
+| APELLIDO | NOMBRE |
+
++----------+--------+
+
+|     NULL |   NULL |
+
++----------+--------+ 
+
+c.
+La consulta no funciona debido a errores de sintaxis.
+
+
+d.
++-------------------+
+
+| APELLIDO Y NOMBRE |
+
++-------------------+
+
+| DIAZ, JULIETA     |
+
++-------------------+ 
+Retroalimentación
+La respuesta correcta es: La consulta no funciona debido a errores de sintaxis.
+Pregunta 2
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
++----------------------------------------------------------------------------+
+|  ID | APELLIDO| NOMBRE | FECHA    | SEXO |  TEL |  MAIL          |CODPOSTAL|
+|----------------------------------------------------------------------------|
+|  1  | PEREZ   | CARLOS |10/10/2000|  M   | 12345| CARL@GMAIL.COM | 1234    |
+|  2  | HERMAN  | DIANA  |21/04/1990|  F   | NULL | HDIA@MAIL.COM  | 1234    |
+|  3  | DIAZ    | JULIETA|30/11/1989|  F   | NULL | NULL           | 5555    |
+|  4  | RE      | JAVIER |02/10/1986|  M   | 99999| NULL           | 1929    |
+|  5  | BAEZ    | MARCOS |05/05/1992|  M   | NULL | MARCOS@BAEZ.COM| 1001    |
+|  6  | GALEANO | IARA   |11/02/1999|  F   | 77712| NULL           | 9999    |
++----------------------------------------------------------------------------+
+
+¿Qué consulta obtiene todos los contactos nacidos después de 1990, de sexo femenino y que viven en el código postal 1001?
+Seleccione una:
+
+a.
+SELECT ALL FROM CONTACTOS WHERE YEAR(FECHA) > 1990 AND SEXO = 'F' AND COD_POSTAL = 1001
+
+
+b.
+SELECT * FROM CONTACTOS WHERE YEAR(FECHA) > 1990 OR SEXO = 'F' OR COD_POSTAL = 1001
+
+
+c.
+SELECT * FROM CONTACTOS WHERE FECHA > 1990 AND SEXO IS 'F' AND COD_POSTAL IN 1001
+
+
+d.
+SELECT * FROM CONTACTOS WHERE YEAR(FECHA) > 1990 AND SEXO = 'F' AND COD_POSTAL = 1001
+
+Retroalimentación
+La respuesta correcta es: SELECT * FROM CONTACTOS WHERE YEAR(FECHA) > 1990 AND SEXO = 'F' AND COD_POSTAL = 1001
+Pregunta 3
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+Partiendo de los siguientes datos:
+
++----+----------+---------+------------+------+-------+-----------------+-----------+
+| ID | APELLIDO | NOMBRE  |   FECHA    | SEXO |  TEL  |      MAIL       | CODPOSTAL |
++----+----------+---------+------------+------+-------+-----------------+-----------+
+|  1 | PEREZ    | CARLOS  | 2000-10-10 | M    | 12345 | CARL@GMAIL.COM  |      1234 |
+|  2 | HERMAN   | DIANA   | 1990-04-21 | F    | NULL  | HDIA@MAIL.COM   |      1234 |
+|  3 | DIAZ     | JULIETA | 1989-11-30 | F    | NULL  | NULL            |      5555 |
+|  4 | RE       | JAVIER  | 1986-10-02 | M    | 99999 | NULL            |      1929 |
+|  5 | BAEZ     | MARCOS  | 1992-05-05 | M    | NULL  | MARCOS@BAEZ.COM |      1001 |
+|  6 | GALEANO  | IARA    | 1999-02-11 | F    | 77712 | NULL            |      9999 |
++----+----------+---------+------------+------+-------+-----------------+-----------+
+¿Qué consulta devuelve el siguiente resultado?
+
++----+----------+--------+------------+------+-------+------+-----------+
+| ID | APELLIDO | NOMBRE |   FECHA    | SEXO |  TEL  | MAIL | CODPOSTAL |
++----+----------+--------+------------+------+-------+------+-----------+
+|  4 | RE       | JAVIER | 1986-10-02 | M    | 99999 | NULL |      1929 |
++----+----------+--------+------------+------+-------+------+-----------+
+Seleccione una:
+
+a.
+SELECT * FROM CONTACTOS WHERE MAIL IS NULL OR SEXO = 'M'
+
+
+b.
+SELECT * FROM CONTACTOS WHERE MAIL IS NULL AND SEXO = 'M'
+
+
+c.
+SELECT * FROM CONTACTOS WHERE MAIL IS NULL AND TEL IS NOT NULL
+
+
+d.
+SELECT * FROM CONTACTOS WHERE MAIL IS '' AND SEXO IS 'M'
+
+Retroalimentación
+La respuesta correcta es: SELECT * FROM CONTACTOS WHERE MAIL IS NULL AND SEXO = 'M'
+Pregunta 4
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+La cláusula WHERE se puede utilizar en las consultas de:
+
+Seleccione una:
+
+a.
+SELECT, UPDATE y DELETE
+
+
+b.
+SELECT, UPDATE, DELETE e INSERT
+
+
+c.
+SELECT
+
+
+d.
+SELECT y UPDATE
+
+Retroalimentación
+La respuesta correcta es: SELECT, UPDATE y DELETE
+Pregunta 5
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+¿Qué consulta obtiene todos aquellos contactos cuyo apellido no finalice con Z?
+
+Seleccione una:
+
+a.
+SELECT * FROM CONTACTOS WHERE APELLIDO NOT LIKE '%Z'
+
+
+b.
+SELECT * FROM CONTACTOS WHERE APELLIDO IS NOT LIKE '%Z'
+
+
+c.
+SELECT * FROM CONTACTOS WHERE APELLIDO LIKE '%^Z'
+
+
+d.
+SELECT * FROM CONTACTOS WHERE APELLIDO <> '%Z'
+
+Retroalimentación
+La respuesta correcta es: SELECT * FROM CONTACTOS WHERE APELLIDO NOT LIKE '%Z'
+Pregunta 6
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+¿Qué consulta obtiene todos los registros de todas las columnas de la tabla contactos?
+
+Seleccione una:
+
+a.
+SELECT * FROM CONTACTOS
+
+
+b.
+Ninguna de las otras respuestas es correcta
+
+
+c.
+SELECT ALL FROM CONTACTOS
+
+
+d.
+SELECT * ALL FROM CONTACTOS
+
+Retroalimentación
+La respuesta correcta es: SELECT * FROM CONTACTOS
+Pregunta 7
+Incorrecta
+Se puntúa 0 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+La siguiente consulta:
+
+SELECT APELLIDO AS SURNAME, NOMBRE AS NAME FROM CONTACTOS WHERE NAME = 'JUAN'
+
+Seleccione una:
+
+a.
+La consulta no funciona correctamente
+
+
+b.
+Obtiene todos los datos de todos los contactos que se llaman Juan.
+
+
+c.
+Obtiene solo el apellido y nombre de todos los contactos que se llaman Juan
+
+
+d.
+Ninguna de las otras opciones es correcta
+
+Retroalimentación
+La respuesta correcta es: La consulta no funciona correctamente
+Pregunta 8
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+¿Qué consulta obtiene los registros de contactos cuyo apellido pueda ser una cadena de indistinta longitud pero su segundo caracter deba ser una vocal?
+
+Seleccione una:
+
+a.
+SELECT * FROM CONTACTOS WHERE APELLIDO LIKE '_[AEIOU]%'
+
+
+b.
+SELECT * FROM CONTACTOS WHERE APELLIDO LIKE '_AEIOU%'
+
+
+c.
+SELECT * FROM CONTACTOS WHERE APELLIDO LIKE '_[A-U]%'
+
+
+d.
+SELECT * FROM CONTACTOS WHERE APELLIDO LIKE '_[AEIOU]'
+
+Retroalimentación
+La respuesta correcta es: SELECT * FROM CONTACTOS WHERE APELLIDO LIKE '_[AEIOU]%'
+Pregunta 9
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+¿Qué consulta obtiene correctamente aquellos registros cuyo campo TEL sea nulo?
+
+Seleccione una:
+
+a.
+SELECT * FROM CONTACTOS WHERE TEL IS NULL
+
+
+b.
+SELECT * FROM CONTACTOS WHERE TEL = 'NULL'
+
+
+c.
+SELECT * FROM CONTACTOS WHERE TEL = NULL
+
+
+d.
+SELECT * FROM CONTACTOS WHERE TEL IS 'NULL'
+
+Retroalimentación
+La respuesta correcta es: SELECT * FROM CONTACTOS WHERE TEL IS NULL
+Pregunta 10
+Correcta
+Se puntúa 1 sobre 1
+No marcadasMarcar pregunta
+Enunciado de la pregunta
+Para obtener aquellos registros que no pertenezcan al código postal 1000, 1001 y 1002.
+
+¿Cuál de las siguientes consultas se podría utilizar?
+
+Seleccione una:
+
+a.
+SELECT * FROM CONTACTOS WHERE CODPOSTAL <> 1000 AND CODPOSTAL <> 1001 AND CODPOSTAL <> 1002
+
+
+b.
+SELECT * FROM CONTACTOS WHERE CODPOSTAL NOT BETWEEN 1000 AND 1002
+
+
+c.
+Todas las consultas obtienen el resultado esperado.
+
+
+d.
+SELECT * FROM CONTACTOS WHERE CODPOSTAL NOT IN (1000, 1001, 1002)
+
+Retroalimentación
+La respuesta correcta es: Todas las consultas obtienen el resultado esperado.
+Salta Navegación por el cuestionario
+Navegación por el cuestionario
+Mostrar una página cada vez
