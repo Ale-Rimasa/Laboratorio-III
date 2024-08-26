@@ -1,0 +1,33 @@
+CREATE DATABASE Academia_Musica
+GO
+
+USE Academia_Musica
+GO
+
+CREATE TABLE Musicos(
+	ID_Musico BIGINT NOT NULL PRIMARY KEY IDENTITY (1,1),
+	Nombre VARCHAR(50) NOT NULL,
+	Apellido VARCHAR(50) NOT NULL,
+	FechaIngreso DATE NOT NULL CONSTRAINT DF_FechaIngreso DEFAULT GETDATE(),
+	FechaNacimiento DATE NOT NULL
+)
+
+CREATE TABLE TipoInstrumento(
+	ID_TipoInstrumento BIGINT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Descripcion VARCHAR(100) NOT NULL
+)
+
+
+CREATE TABLE Instrumento(
+	ID_Instrumento BIGINT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Nombre VARCHAR(50) NOT NULL UNIQUE,
+	Descripcion VARCHAR(50) NOT NULL,
+	ID_TipoInstrumento BIGINT NOT NULL FOREIGN KEY REFERENCES TipoInstrumento (ID_TipoInstrumento)
+)
+
+
+CREATE TABLE Musico_X_Instrumento(
+	ID_Musico_X_Instrumento BIGINT NOT NULL PRIMARY KEY IDENTITY (1,1),
+	ID_Musico BIGINT NOT NULL FOREIGN KEY REFERENCES Musicos(ID_Musico),
+	ID_Instrumento BIGINT NOT NULL FOREIGN KEY REFERENCES Instrumento(ID_Instrumento)
+)
