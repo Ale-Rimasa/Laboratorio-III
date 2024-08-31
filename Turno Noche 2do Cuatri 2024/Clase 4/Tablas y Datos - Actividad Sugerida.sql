@@ -1,0 +1,101 @@
+CREATE DATABASE Peliculas
+GO
+
+USE Peliculas
+GO
+
+CREATE TABLE Pais(
+	ID_Pais INT NOT NULL PRIMARY KEY IDENTITY (1,1),
+	Nombre NVARCHAR(50) NOT NULL
+)
+
+CREATE TABLE Genero(
+	ID_Genero INT NOT NULL PRIMARY KEY IDENTITY (1,1),
+	Nombre NVARCHAR(30) NOT NULL
+)
+
+CREATE TABLE Calificaciones(
+	ID_Calificaciones INT NOT NULL PRIMARY KEY IDENTITY (1,1),
+	Nombre NVARCHAR (50)
+)
+
+CREATE TABLE Actores(
+	ID_Actores INT NOT NULL PRIMARY KEY IDENTITY (1,1),
+	Apellido NVARCHAR(50) NOT NULL,
+	Nombre NVARCHAR(50) NOT NULL,
+	FechaNacimiento SMALLDATETIME NOT NULL,
+	ID_Pais INT NOT NULL FOREIGN KEY REFERENCES Pais(ID_Pais)
+)
+
+CREATE TABLE Peliculas(
+	ID_Pelicula INT NOT NULL PRIMARY KEY IDENTITY (1,1),
+	ID_Pais INT NOT NULL FOREIGN KEY REFERENCES Pais(ID_Pais),
+	Titulo NVARCHAR(150) NOT NULL,
+	Inversion MONEY,
+	Recaudacion MONEY,
+	TicketsVendidos BIGINT,
+	ID_Genero INT NOT NULL FOREIGN KEY REFERENCES Genero (ID_Genero),
+	Fecha_Estreno SMALLDATETIME,
+	Duracion TINYINT,
+	ID_Calificaciones INT NOT NULL FOREIGN KEY REFERENCES Calificaciones (ID_Calificaciones),
+	Puntaje DECIMAL(10,2)
+)
+
+CREATE TABLE Actores_X_Pelicula(
+  ID_Pelicula INT NOT NULL FOREIGN KEY REFERENCES Peliculas (ID_Pelicula),
+  ID_Actores INT NOT NULL FOREIGN KEY REFERENCES Actores (ID_Actores)
+  CONSTRAINT PK_AxP PRIMARY KEY (ID_Pelicula, ID_Actores)
+)
+
+
+/*************************************************************************************/
+--CREACION DE DATOS
+
+INSERT INTO Calificaciones (NOMBRE) VALUES
+('APTO PARA TODO PUBLICO'),
+('APTO PARA MAYORES DE 13'),
+('APTO PARA MAYORES DE 16')
+GO
+
+INSERT INTO Genero (Nombre) VALUES
+('TERROR'),
+('COMEDIA'),
+('CIENCIA FICCION'),
+('DRAMA')
+GO
+
+INSERT INTO Pais (Nombre) VALUES
+('ARGENTINA'),
+('ESTADOS UNIDOS'),
+('REINO UNIDO'),
+('INDIA'),
+('FRANCIA'),
+('ESPAÑA')
+GO
+
+INSERT INTO Actores (Apellido,Nombre,FechaNacimiento,ID_Pais) VALUES
+('DARIN', 'RICARDO', '1957-01-16', 1),
+('BALE', 'CHRISTIAN', '1974/01/30', 3),
+('PALTROW','GWYNETH','1972/11/27',2),
+('FREEMAN', 'MORGAN', '1937/06/01', 2)
+GO
+
+INSERT INTO PELICULAS (ID_Pais, TITULO, INVERSION, RECAUDACION, TicketsVendidos, 
+ID_Genero, FECHA_ESTRENO, DURACION, ID_Calificaciones, PUNTAJE)
+VALUES
+(2, 'SEVEN', 10000000, 30000000, 5000000, 4, '1996/01/15', 127, 2, 8.7),
+(1, 'UN CUENTO CHINO', 5000000, 4000000, 1000000, 2, '2011/03/24', 93, 1, 7.3),
+(2, 'TERMINATOR', 20000000, 90000000, 6000000, 3, '2009/06/03', 115, 2, 6.7),
+(2,'Rapido y Furioso',15000000,50000000,7000000, 3, '2001/05/25', 130, 3, 7.5)
+GO
+
+INSERT INTO Actores_X_Pelicula(ID_Pelicula,ID_Actores)
+VALUES
+(2, 2),
+(3, 3),
+(8, 4),
+(2, 3)
+
+
+SELECT  * FROM Peliculas
+SELECT * FROM Actores
