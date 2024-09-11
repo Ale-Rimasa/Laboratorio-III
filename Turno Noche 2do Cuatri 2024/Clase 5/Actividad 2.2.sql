@@ -252,6 +252,17 @@ SELECT CONCAT(U.Apellido,' ',U.Nombre) AS [Apellido y Nombre] FROM Archivos AS A
 		ON U.IDUsuario = AC.IDUsuario
 	WHERE A.Nombre = 'Documento Legal'
 
+
+
+	SELECT u.Apellido, u.Nombre FROM Archivos a
+INNER JOIN Usuarios u ON a.IDUsuarioDueño = u.IDUsuario
+WHERE a.Nombre = 'Documento Legal'
+UNION
+SELECT uc.Apellido, uc.Nombre FROM Archivos a
+INNER JOIN ArchivosCompartidos ac ON a.IDArchivo = ac.IDArchivo
+INNER JOIN Usuarios uc ON ac.IDUsuario = uc.IDUsuario
+WHERE a.Nombre = 'Documento Legal'
+
 SELECT * FROM ArchivosCompartidos
 SELECT * FROM Archivos
 SELECT * FROM Permisos
