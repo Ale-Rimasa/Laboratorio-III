@@ -23,6 +23,11 @@ GO
 SELECT A.Nombre, A.Extension, (A.Tamaño / 1048576 ) AS [Tamaño en Megabytes], TA.TipoArchivo FROM Archivos AS A
 	INNER JOIN TiposArchivos AS TA
 	ON A.IDTipoArchivo = TA.IDTipoArchivo
+
+--Consulta para mostrar con decimales
+SELECT A.Nombre, A.Extension, CAST(A.Tamaño / 1048576.0 AS DECIMAL(10,2) ) AS [Tamaño en Megabytes], TA.TipoArchivo FROM Archivos AS A
+	INNER JOIN TiposArchivos AS TA
+	ON A.IDTipoArchivo = TA.IDTipoArchivo
 GO
 /***********************************************************************************************************/
 
@@ -89,10 +94,11 @@ GO
 --de los tres archivos con extensión 'zip' más pesados. Puede ocurrir que el
 --mismo usuario aparezca varias veces en el listado.
 
-SELECT TOP 3 CONCAT(U.Apellido,' ',U.Nombre), A.Tamaño FROM Archivos AS A
+SELECT TOP 3 CONCAT(U.Apellido,' ',U.Nombre) AS [Apellido Nombre], A.Tamaño FROM Archivos AS A
 	INNER JOIN Usuarios AS U
 		ON A.IDUsuarioDueño = U.IDUsuario
 		WHERE A.Extension = 'zip'
+		Order BY A.Tamaño DESC
 GO
 /***********************************************************************************************************/
 
@@ -106,9 +112,9 @@ GO
 
 SELECT A.Nombre, A.Extension, A.Tamaño, TA.TipoArchivo,
 	CASE									
-		WHEN A.Tamaño >= 1073741824 THEN A.Tamaño / 1073741824.0
-        WHEN A.Tamaño >= 1048576 THEN A.Tamaño / 1048576.0
-        WHEN A.Tamaño >= 1024 THEN A.Tamaño / 1024.0
+		WHEN A.Tamaño >= 1073741824 THEN A.Tamaño / 1073741824
+        WHEN A.Tamaño >= 1048576 THEN A.Tamaño / 1048576
+        WHEN A.Tamaño >= 1024 THEN A.Tamaño / 1024
         ELSE A.Tamaño
 	END AS [Tamaño Calculado],
     CASE 
@@ -126,14 +132,15 @@ GO
 
 --11 Listar los nombres de archivo y extensión de los archivos que han sido compartidos.
 
-SELECT A.Nombre, A.Extension FROM ArchivosCompartidos AS AC
+SELECT DISTINCT A.Nombre, A.Extension FROM ArchivosCompartidos AS AC
 	INNER JOIN Archivos AS A
 		ON AC.IDArchivo = A.IDArchivo
+		ORDER BY A.Nombre 
 GO
 /***********************************************************************************************************/
 
 -- 12 Listar los nombres de archivo y extensión de los archivos que han sido compartidos a usuarios con apellido 'Clarck' o 'Jones'
-SELECT A.Nombre AS [Nombre Archivo], A.Extension FROM ArchivosCompartidos AS AC
+SELECT DISTINCT A.Nombre AS [Nombre Archivo], A.Extension FROM ArchivosCompartidos AS AC
 	INNER JOIN Archivos AS A
 		ON AC.IDArchivo = A.IDArchivo
 	INNER JOIN Usuarios AS U
@@ -145,33 +152,35 @@ GO
 
 --13 Listar los nombres de archivo, extensión, apellidos y nombres de los usuarios a quienes se le hayan compartido archivos con permiso de 'Escritura'
 
-SELECT A.Nombre, A.Extension, CONCAT(U.Apellido,' ', U.Nombre) AS[Apellido y Nombre]  FROM Archivos AS A
-	INNER JOIN Usuarios AS U 
-		ON A.IDUsuarioDueño = U.IDUsuario
+SELECT A.Nombre, A.Extension, CONCAT (U.Apellido,' ', U.Nombre) AS[Apellido y Nombre]  FROM Archivos AS A
 	INNER JOIN ArchivosCompartidos AS AC
-		ON U.IDUsuario = AC.IDUsuario
+		ON A.IDArchivo= AC.IDArchivo
+	INNER JOIN Usuarios AS U 
+		ON AC.IDUsuario = U.IDUsuario
 	INNER JOIN Permisos AS P
 		ON AC.IDPermiso = P.IDPermiso
-WHERE P.Nombre = 'Escritura'
+WHERE P.Nombre= 'Escritura'
 GO
 /***********************************************************************************************************/
 
 --14 Listar los nombres de archivos y extensión de los archivos que no han sido compartidos.
 
-SELECT A.IDArchivo, A.Nombre, A.Extension FROM Archivos AS A
+SELECT  A.Nombre, A.Extension FROM Archivos AS A
 	LEFT JOIN ArchivosCompartidos AS AC
 		ON A.IDArchivo = AC.IDArchivo
 WHERE AC.IDArchivo IS NULL
+ORDER BY A.Nombre 
 GO
 /***********************************************************************************************************/
 
 
 --15 Listar los apellidos y nombres de los usuarios dueños que tienen archivos eliminados.
 
-SELECT CONCAT(U.Apellido,' ',U.Nombre) AS [Apellido y Nombre] FROM Archivos AS A
+SELECT DISTINCT U.Apellido, CONCAT(U.Apellido,' ',U.Nombre) AS [Apellido y Nombre] FROM Archivos AS A
 	INNER JOIN Usuarios AS U
 		ON A.IDUsuarioDueño = U.IDUsuario
 	WHERE A.Eliminado = 1
+	ORDER BY U.Apellido
 GO
 /***********************************************************************************************************/
 
@@ -195,7 +204,7 @@ GO
 --hayan modificado (fecha de modificación distinta a la fecha de creación).
 
 
-SELECT CONCAT(U.Apellido,' ',U.Nombre) AS[Apellido y Nombre], A.Nombre, A.Extension, A.FechaCreacion, A.FechaUltimaModificacion, DATEDIFF(DAY,FechaUltimaModificacion,GETDATE()) AS [Dias Transcurridos] FROM Archivos AS A
+SELECT CONCAT(U.Apellido,' ',U.Nombre) AS[Apellido y Nombre], A.Nombre AS [Nombre Archivo], A.Extension, A.FechaCreacion, A.FechaUltimaModificacion, DATEDIFF(DAY,FechaUltimaModificacion,GETDATE()) AS [Dias Transcurridos] FROM Archivos AS A
 	INNER JOIN Usuarios AS U
 		ON A.IDUsuarioDueño = U.IDUsuario
 	WHERE A.FechaUltimaModificacion != A.FechaCreacion
@@ -245,29 +254,21 @@ GO
 -- 20 Apellidos y nombres de los usuario que tengan compartido o sea dueño del
 --archivo con nombre 'Documento Legal'.
 
-SELECT CONCAT(U.Apellido,' ',U.Nombre) AS [Apellido y Nombre] FROM Archivos AS A
-	INNER JOIN Usuarios AS U
-		ON A.IDUsuarioDueño = U.IDUsuario
-	INNER JOIN ArchivosCompartidos AS AC
-		ON U.IDUsuario = AC.IDUsuario
-	WHERE A.Nombre = 'Documento Legal'
-
-
-
-	SELECT u.Apellido, u.Nombre FROM Archivos a
-INNER JOIN Usuarios u ON a.IDUsuarioDueño = u.IDUsuario
-WHERE a.Nombre = 'Documento Legal'
-UNION
+SELECT u.Apellido, u.Nombre FROM Archivos a
+		INNER JOIN Usuarios u 
+			ON a.IDUsuarioDueño = u.IDUsuario
+				WHERE a.Nombre = 'Documento Legal'UNION
 SELECT uc.Apellido, uc.Nombre FROM Archivos a
-INNER JOIN ArchivosCompartidos ac ON a.IDArchivo = ac.IDArchivo
-INNER JOIN Usuarios uc ON ac.IDUsuario = uc.IDUsuario
-WHERE a.Nombre = 'Documento Legal'
+		INNER JOIN ArchivosCompartidos ac 
+			ON a.IDArchivo = ac.IDArchivo
+		INNER JOIN Usuarios uc ON ac.IDUsuario = uc.IDUsuario
+				WHERE a.Nombre = 'Documento Legal'
 
+GO
+/***********************************************************************************************************/
 SELECT * FROM ArchivosCompartidos
 SELECT * FROM Archivos
 SELECT * FROM Permisos
 SELECT * FROM Usuarios
 SELECT * FROM TiposArchivos
 SELECT * FROM TiposUsuario
-GO
-/***********************************************************************************************************/
