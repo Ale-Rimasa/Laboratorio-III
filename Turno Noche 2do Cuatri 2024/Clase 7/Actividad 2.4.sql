@@ -117,7 +117,77 @@ FROM Usuarios AS U
 /***********************************************************************************************************/
 --11 Los archivos que fueron compartidos con permiso de 'Comentario' pero no con permiso de 'Lectura'
 
-SELECT 
+SELECT A.IDArchivo, A.Nombre FROM Archivos AS A
+	INNER JOIN ArchivosCompartidos AS AC
+		ON A.IDArchivo = AC.IDArchivo
+	INNER JOIN Permisos AS P
+		ON AC.IDPermiso = P.IDPermiso
+			WHERE P.Nombre = 'Comentario' AND A.IDArchivo NOT IN 
+(
+SELECT AC1.IDArchivo FROM ArchivosCompartidos AS AC1
+	INNER JOIN Permisos AS P1
+		ON AC1.IDPermiso = P1.IDPermiso
+		WHERE P1.Nombre = 'Lectura'
+)
+/***********************************************************************************************************/
+--12 Los tipos de archivos que registran más archivos eliminados que no eliminados.
+
+SELECT TA.IDTipoArchivo, TA.TipoArchivo FROM TiposArchivos AS TA
+		WHERE (
+SELECT COUNT(*) FROM Archivos AS A
+		WHERE A.IDTipoArchivo= TA.IDTipoArchivo AND A.Eliminado = 1
+) >
+(
+SELECT COUNT(*) FROM Archivos AS A
+		WHERE A.IDTipoArchivo= TA.IDTipoArchivo AND A.Eliminado = 0
+)
+/***********************************************************************************************************/
+--13 Los usuario que registren más archivos pequeños que archivos grandes (pero que al menos registren un archivo de cada uno)
+SELECT U.IDUsuario, U.Nombre, U.Apellido FROM Usuarios AS U
+	WHERE (
+	SELECT COUNT(*) FROM Archivos AS A
+	WHERE A.IDUsuarioDueño = U.IDUsuario AND A.Tamaño < 1048576
+) > 
+(
+	SELECT COUNT(*) FROM Archivos AS A1
+	WHERE A1.IDUsuarioDueño = U.IDUsuario AND A1.Tamaño >= 1048576
+)
+AND (
+	SELECT COUNT(*) FROM Archivos AS A2
+	WHERE A2.IDUsuarioDueño = U.IDUsuario AND A2.Tamaño < 1048576
+) > 0
+AND (
+	SELECT COUNT(*) FROM Archivos AS A3
+	WHERE A3.IDUsuarioDueño = U.IDUsuario AND A3.Tamaño >= 1048576
+) > 0
+
+/***********************************************************************************************************/
+--14 Los usuarios que hayan creado más archivos en el 2022 que en el 2023 y en el 2023 que en el 2024.
+SELECT U.IDUsuario, U.Nombre, U.Apellido
+FROM Usuarios AS U
+WHERE (
+    SELECT COUNT(*)
+    FROM Archivos AS A
+    WHERE A.IDUsuarioDueño = U.IDUsuario
+      AND YEAR(A.FechaCreacion) = 2022
+) > (
+    SELECT COUNT(*)
+    FROM Archivos AS A
+    WHERE A.IDUsuarioDueño = U.IDUsuario
+      AND YEAR(A.FechaCreacion) = 2023
+)
+AND (
+    SELECT COUNT(*)
+    FROM Archivos AS A1
+    WHERE A1.IDUsuarioDueño = U.IDUsuario
+      AND YEAR(A1.FechaCreacion) = 2023
+) > (
+    SELECT COUNT(*)
+    FROM Archivos AS A2
+    WHERE A2.IDUsuarioDueño = U.IDUsuario
+      AND YEAR(A2.FechaCreacion) = 2024
+)
+
 
 SELECT * FROM TiposUsuario
 SELECT * FROM Usuarios
