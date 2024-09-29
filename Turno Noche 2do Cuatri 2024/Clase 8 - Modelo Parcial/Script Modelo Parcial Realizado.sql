@@ -1,0 +1,46 @@
+-- 1 ¿Qué Obras Sociales cubren a pacientes que se hayan atendido en algún turno con algún médico de especialidad 'Odontología'?
+
+SELECT OS.NOMBRE FROM OBRAS_SOCIALES AS OS
+	INNER JOIN PACIENTES AS P
+		ON OS.IDOBRASOCIAL = P.IDOBRASOCIAL
+	INNER JOIN TURNOS AS T
+		ON P.IDPACIENTE = T.IDPACIENTE
+	INNER JOIN MEDICOS AS M
+		ON T.IDMEDICO = M.IDMEDICO
+	INNER JOIN ESPECIALIDADES AS E
+		ON M.IDESPECIALIDAD = E.IDESPECIALIDAD
+WHERE E.NOMBRE = 'Odontología'
+
+
+-- 2 ¿Cuántos pacientes distintos se atendieron en turnos que duraron más que la duración promedio?
+SELECT COUNT(DISTINCT T.IDPACIENTE ) AS [Turnos distintos] FROM TURNOS AS T
+	WHERE T.DURACION > (
+	SELECT AVG(T2.DURACION) FROM TURNOS AS T2
+	)
+
+
+-- 3 ¿Cuál es el costo de la consulta promedio de los/as especialistas en "Oftalmología"?
+SELECT AVG(M.COSTO_CONSULTA) FROM MEDICOS AS M
+	INNER JOIN ESPECIALIDADES AS E
+		ON M.IDESPECIALIDAD = E.IDESPECIALIDAD
+			WHERE E.NOMBRE = 'Oftalmología'
+
+
+-- 4 ¿Cuál es la cantidad de pacientes que no se atendieron en el año 2019?
+SELECT COUNT(DISTINCT P.IDPACIENTE) AS [No atendidos en 2019] FROM PACIENTES AS P
+	WHERE P.IDPACIENTE NOT IN (
+		SELECT T.IDPACIENTE FROM TURNOS AS T
+			WHERE YEAR(T.FECHAHORA) = 2019
+)
+
+-- 5 ¿Cuál es el apellido del médico (sexo masculino) con más antigüedad de la clínica?
+
+SELECT TOP 1 M.APELLIDO, M.FECHAINGRESO FROM MEDICOS AS M
+	WHERE M.SEXO = 'M'
+		ORDER BY M.FECHAINGRESO
+
+SELECT * FROM OBRAS_SOCIALES
+SELECT * FROM MEDICOS ORDER BY FECHAINGRESO
+SELECT * FROM PACIENTES
+SELECT * FROM TURNOS
+SELECT * FROM ESPECIALIDADES
