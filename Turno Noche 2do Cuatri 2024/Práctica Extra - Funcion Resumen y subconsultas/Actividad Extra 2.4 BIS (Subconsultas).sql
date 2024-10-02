@@ -173,15 +173,91 @@ GROUP BY DP.Apellidos, DP.Nombres, U.NombreUsuario
 -- género masculino.
 SELECT C.Nombre,
 (
-SELECT FROM 
-
+SELECT SUM(I.Costo) FROM Inscripciones AS I
+	INNER JOIN Usuarios AS U
+		ON I.IDUsuario = U.ID
+	INNER JOIN Datos_Personales AS DP
+		ON U.ID = DP.ID
+			WHERE DP.Genero = 'F' AND C.ID = I.IDCurso
+) AS [Recaudación Femenina],
+(
+SELECT SUM(I.Costo) FROM Inscripciones AS I
+	INNER JOIN Usuarios AS U
+		ON I.IDUsuario = U.ID
+	INNER JOIN Datos_Personales AS DP
+		ON U.ID = DP.ID
+			WHERE DP.Genero = 'M' AND C.ID = I.IDCurso
+) AS [Recaudación Masculina]
 FROM Cursos AS C
+	ORDER BY C.Nombre
+
+--MAS EFICIENTE
+
+SELECT C.Nombre,
+       SUM(CASE WHEN DP.Genero = 'F' THEN I.Costo ELSE 0 END) AS [Recaudación Femenina],
+       SUM(CASE WHEN DP.Genero = 'M' THEN I.Costo ELSE 0 END) AS [Recaudación Masculina]
+FROM Cursos AS C
+INNER JOIN Inscripciones AS I ON C.ID = I.IDCurso
+INNER JOIN Usuarios AS U ON I.IDUsuario = U.ID
+INNER JOIN Datos_Personales AS DP ON U.ID = DP.ID
+GROUP BY C.Nombre
 
 /***********************************************************************************************************/
 -- 12 Listado con nombre de país de aquellos que hayan registrado más usuarios de
 -- género masculino que de género femenino.
 
+SELECT P.Nombre AS [Paises con Mayor cantidad de Masculinos] FROM Paises AS P
+	WHERE 
+		(SELECT COUNT(*) FROM Localidades AS L
+			INNER JOIN Datos_Personales AS DP
+				ON L.ID = DP.IDLocalidad
+			WHERE DP.Genero = 'M' AND L.IDPais = P.ID
+		) >
+		(SELECT COUNT(*) FROM Localidades AS L
+			INNER JOIN Datos_Personales AS DP
+				ON L.ID = DP.IDLocalidad
+			WHERE DP.Genero = 'F' AND L.IDPais = P.ID
+		)
+
+
 /***********************************************************************************************************/
 -- 13 Listado con nombre de país de aquellos que hayan registrado más usuarios de
 -- género masculino que de género femenino pero que haya registrado al menos un
 -- usuario de género femenino.
+
+SELECT P.Nombre AS [Paises con Mayor cantidad de Masculinos] FROM Paises AS P
+	WHERE 
+		(SELECT COUNT(*) FROM Localidades AS L
+			INNER JOIN Datos_Personales AS DP
+				ON L.ID = DP.IDLocalidad
+			WHERE DP.Genero = 'M' AND L.IDPais = P.ID
+		) >= ANY
+		(SELECT COUNT(*) FROM Localidades AS L
+			INNER JOIN Datos_Personales AS DP
+				ON L.ID = DP.IDLocalidad
+			WHERE DP.Genero = 'F' AND L.IDPais = P.ID
+		)
+/***********************************************************************************************************/
+-- 14 	Listado de cursos que hayan registrado la misma cantidad de idiomas de audio que
+-- de subtítulos.
+SELECT C.Nombre FROM Cursos AS C
+		WHERE (
+(SELECT COUNT(*) FROM Idiomas_x_Curso AS IXC
+	INNER JOIN FormatosIdioma AS FI
+		ON IXC.IDFormatoIdioma = FI.ID
+	WHERE FI.Nombre = 'Audio' AND IXC.IDCurso = C.ID) =
+(SELECT COUNT(*) FROM Idiomas_x_Curso AS IXC
+	INNER JOIN FormatosIdioma AS FI
+		ON IXC.IDFormatoIdioma = FI.ID
+	WHERE FI.Nombre = 'Subtitulo' AND IXC.IDCurso = C.ID)
+)
+/***********************************************************************************************************/
+--15 Listado de usuarios que hayan realizado más cursos en el año 2018 que en el 2019 y
+-- a su vez más cursos en el año 2019 que en el 2020.
+
+
+
+SELECT * FROM Cursos
+SELECT * FROM Paises
+SELECT * FROM Localidades
+SELECT * FROM Datos_Personales
