@@ -127,3 +127,12 @@ Create Table Instructores_x_Curso(
     IDCurso bigint not null foreign key references Cursos(ID),
     Primary Key (IDUsuario, IDCurso)
 )
+
+ALTER TABLE Cursos
+ADD DebeSerMayorDeEdad bit NOT NULL DEFAULT 0;
+
+SELECT * FROM Cursos
+
+UPDATE Cursos
+SET DebeSerMayorDeEdad = 1
+WHERE ID IN (2, 3, 6,7,10);
