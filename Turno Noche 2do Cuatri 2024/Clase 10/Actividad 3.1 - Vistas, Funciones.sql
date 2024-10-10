@@ -19,7 +19,7 @@ END
 
 --Ejemplo de uso en funcion
 
-SELECT dbo.FN_TotalDebitosxTarjeta(4) AS TotalDebitos
+SELECT dbo.FN_TotalDebitosxTarjeta(2) AS TotalDebitos
 
 
 --B) Realizar una función llamada TotalCreditosxTarjeta que reciba un ID de Tarjeta y registre el total
@@ -27,18 +27,23 @@ SELECT dbo.FN_TotalDebitosxTarjeta(4) AS TotalDebitos
 --contemplar el estado de la tarjeta para realizar el cálculo.
 
 
+CREATE OR ALTER FUNCTION FN_TotalCreditosxTarjeta(
+	@ID_Tarjeta INT
+)
+returns MONEY
+as
+BEGIN
+	Declare @TotalAcumuladoPesos MONEY
 
+	SELECT @TotalAcumuladoPesos = COALESCE(SUM(M.IMPORTE),0) FROM MOVIMIENTOS AS M
+	WHERE M.TIPO = 'C' AND M.IDTARJETA = @ID_Tarjeta
 
+	Return @TotalAcumuladoPesos
+END
 
+--Ejemplo de uso en funcion
 
-
-
-
-
-
-
-
-
+SELECT dbo.FN_TotalCreditosxTarjeta(2) AS [Total de Pesos]
 
 --C) Realizar una vista que permita conocer los datos de los usuarios y sus respectivas tarjetas. La misma
 --debe contener: Apellido y nombre del usuario, número de tarjeta SUBE, estado de la tarjeta y saldo.
