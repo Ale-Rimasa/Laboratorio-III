@@ -1,0 +1,32 @@
+--2) Realizar un trigger que al registrar un nuevo usuario:
+-- Registre el usuario
+-- Registre una tarjeta a dicho usuario
+CREATE OR ALTER TRIGGER TR_NuevoUsuario ON USUARIOS
+AFTER Insert
+AS BEGIN
+	BEGIN TRY
+			BEGIN TRANSACTION
+	
+			-- Registro de tarjeta por usuario registrado
+
+			INSERT INTO TARJETAS (IDUSUARIO, FECHA_ALTA, SALDO, ESTADO)
+			SELECT IDUSUARIO, GETDATE(),0,1
+				FROM inserted
+			IF @@TRANCOUNT > 0 BEGIN
+			COMMIT TRANSACTION
+			END
+	END TRY
+	BEGIN CATCH
+			IF @@TRANCOUNT > 0 BEGIN
+			ROLLBACK TRANSACTION
+			END
+	END CATCH
+END
+GO
+
+--Prueba de trigger
+INSERT INTO USUARIOS (DNI,APELLIDO,NOMBRE,DOMICILIO,FECHA_NAC,ESTADO)
+VALUES (11111111, 'Rimasa', 'Ale', 'Escalada 1000', GETDATE(), 1)
+
+SELECT * FROM USUARIOS
+SELECT * FROM TARJETAS
