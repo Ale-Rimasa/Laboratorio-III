@@ -5,7 +5,7 @@
 CREATE OR ALTER FUNCTION FN_TotalDebitosxTarjeta(
 	@ID_Tarjeta INT
 )
-returns MONEY
+returns MONEY 
 as
 BEGIN 
 	Declare @TotalAcumuladoPesos MONEY
@@ -15,7 +15,7 @@ BEGIN
 
 	Return @TotalAcumuladoPesos
 END
-
+GO
 
 --Ejemplo de uso en funcion
 
