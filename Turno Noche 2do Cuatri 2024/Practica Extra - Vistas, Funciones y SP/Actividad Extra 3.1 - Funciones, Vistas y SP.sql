@@ -193,8 +193,48 @@ SELECT * FROM Cursos
 
 CREATE OR ALTER PROCEDURE SP_PagaInscripcion(
 	@IDInscripcion BIGINT,
-	@MontoPado MONEY
+	@MontoPago MONEY
 )
 AS BEGIN
 	--Valido si esta el IDInscripcion
-	IF @IDInscripcion IS NOT NULL
+	IF NOT EXISTS (SELECT 1 FROM Inscripciones WHERE ID = @IDInscripcion)
+	BEGIN
+		RAISERROR('La inscripción no existe',16,1)
+		RETURN
+	END
+		--Obtener el costo de la inscripcion y el total pagado hasta ahora
+	DECLARE @CostoInscripcion MONEY, @TotalPagado MONEY, @SaldoRestante MONEY
+
+	SELECT @CostoInscripcion = Costo FROM Inscripciones WHERE ID = @IDInscripcion
+	SELECT @TotalPagado = ISNULL(SUM(Importe),0) FROM Pagos WHERE IDInscripcion = @IDInscripcion
+
+	--Calculo el saldo que resta
+	SET @SaldoRestante = @CostoInscripcion - @TotalPagado
+
+	--Verifico si esta pago
+	IF @SaldoRestante <= 0
+	BEGIN
+		RAISERROR ('La inscripcion ya está paga',16,1)
+		RETURN
+	END
+
+	--VERIFICAR que el monto a pagar no exceda el saldo restante
+	IF @MontoPago > @SaldoRestante
+		BEGIN
+			RAISERROR('El monto excede el saldo restante',16,1)
+			RETURN
+		END
+
+		--Registrar el pago
+	INSERT INTO Pagos (IDInscripcion,Fecha,Importe)
+	VALUES (@IDInscripcion,GETDATE(), @MontoPago)
+
+	--Confirmacion del pago
+
+	PRINT 'Pago registrado correctamente' + CAST(@IDInscripcion AS NVARCHAR(10))
+		+ '. Monto pagado: $' + CAST (@MontoPago AS NVARCHAR(10))
+
+END
+SELECT * FROM 
+SELECT * FROM Inscripciones
+EXEC SP_PagaInscripcion 38, 1000
